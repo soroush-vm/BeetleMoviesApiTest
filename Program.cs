@@ -45,9 +45,4 @@ app.MapGet("/movies", async Task<Results<NoContent, Ok<IEnumerable<MovieDTO>>>>
     }
 });
 
-// app.MapGet("/movie", async (BeetleMoviesContext context, [FromHeader(Name = "X-CUSTOM-TITLE")] string title) =>
-// {
-//     return await context.Movies.FirstOrDefaultAsync(x => x.Title == title);
-// });
-
 app.Run();
