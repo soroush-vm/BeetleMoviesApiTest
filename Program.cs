@@ -45,4 +45,16 @@ app.MapGet("/movies", async Task<Results<NoContent, Ok<IEnumerable<MovieDTO>>>>
     }
 });
 
+app.MapPost("/Movies", async(
+    BeetleMoviesContext context,
+    IMapper mapper,
+    [FromBody] MovieForCreatingDTO movieForCreatingDto) =>
+{
+    var movie = mapper.Map<Movie>(movieForCreatingDto);
+    context.Add(movie);
+    await context.SaveChangesAsync();
+    return TypedResults.CreatedAtRoute(movieToReturn, "GetMovies", new { id = movieToReturn.id });
+}
+);
+
 app.Run();
