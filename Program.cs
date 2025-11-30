@@ -54,7 +54,7 @@ app.MapPost("/Movies", async(
 
     var movieToReturn = mapper.Map<MovieDTO>(movie);
 
-    return TypedResults.CreatedAtRoute(movieToReturn, "GetMovies", new { id = movieToReturn.id });
+    return TypedResults.CreatedAtRoute(movieToReturn, "GetMovies", new { id = movieToReturn.Id });
 }
 );
 
