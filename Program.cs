@@ -15,12 +15,6 @@ var app = builder.Build();
 
 app.MapGet("/", () => "Hello World!");
 
-
-app.MapGet("/movies/{number:int}", async (BeetleMoviesContext context,IMapper mapper, int number) =>
-{
-    return mapper.Map<MovieDTO>(await context.Movies.FirstOrDefaultAsync(x => x.Id == number));
-});
-
 app.MapGet("/movies/{moviesId:int}/directors",async (BeetleMoviesContext context,IMapper mapper, int moviesId) =>
 {
     return mapper.Map<IEnumerable<DirectorDTO>>((await context.Movies
@@ -44,6 +38,10 @@ app.MapGet("/movies", async Task<Results<NoContent, Ok<IEnumerable<MovieDTO>>>>
         return TypedResults.Ok(mapper.Map<IEnumerable<MovieDTO>>(movieEntity));
     }
 });
+app.MapGet("/movies/{id:int}", async (BeetleMoviesContext context,IMapper mapper, int id) =>
+{
+    return mapper.Map<MovieDTO>(await context.Movies.FirstOrDefaultAsync(x => x.Id == id));
+}).WithName("GetMovies");
 
 app.MapPost("/Movies", async(
     BeetleMoviesContext context,
@@ -53,6 +51,9 @@ app.MapPost("/Movies", async(
     var movie = mapper.Map<Movie>(movieForCreatingDto);
     context.Add(movie);
     await context.SaveChangesAsync();
+
+    var movieToReturn = mapper.Map<MovieDTO>(movie);
+
     return TypedResults.CreatedAtRoute(movieToReturn, "GetMovies", new { id = movieToReturn.id });
 }
 );
